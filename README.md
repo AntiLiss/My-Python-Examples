@@ -1,0 +1,1 @@
+Here are some my amateur projects on Python, that I found useful. You can safely use these works for your needs. Although they are not too complex, but some of them are really useful. For example: 'Censure script' and e.t.c.
