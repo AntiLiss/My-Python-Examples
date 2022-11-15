@@ -1,0 +1,7 @@
+Intall these modules:
+
+wave
+moviepy
+vosk and vosk model(file)
+pydub
+ffmpeg
