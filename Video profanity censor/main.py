@@ -29,7 +29,7 @@ class Word:
             self.word, self.start, self.end, self.conf*100)
 
 
-def media_censor(video_file_path: str, censure_sound_path: str, censuring_words: list, vosk_model_path='D:\\vosk-model-small-ru-0.22'):
+def media_censor(video_file_path: str, censure_sound_path: str, vosk_model_path: str, censuring_words: list):
     '''Censure from video chosen words
 
     Parameters
