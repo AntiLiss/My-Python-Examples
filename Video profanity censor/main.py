@@ -28,7 +28,8 @@ class Word:
         return "{:20} from {:.2f} sec to {:.2f} sec, confidence is {:.2f}%".format(
             self.word, self.start, self.end, self.conf*100)
 
-
+    
+# Use this function for import
 def video_censor(video_file_path: str, censure_sound_path: str, vosk_model_path: str, censuring_words: list):
     '''Censure from video chosen words
 
