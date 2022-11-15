@@ -29,9 +29,11 @@ class Word:
             self.word, self.start, self.end, self.conf*100)
 
 
-def media_censor(video_file_path: str, censure_sound_path: str, vosk_model_path: 'D:\\vosk-model-small-ru-0.22', censuring_words: list):
+def media_censor(video_file_path: str, censure_sound_path: str, censuring_words: list, vosk_model_path='D:\\vosk-model-small-ru-0.22'):
     '''Censure from video chosen words
-    
+
+    Parameters
+    ----------
     video_file_path
       A path to your videofile
       
@@ -48,14 +50,16 @@ def media_censor(video_file_path: str, censure_sound_path: str, vosk_model_path:
     
     video_filename = video_file_path
     audio_filename = video_filename[:video_filename.rindex('.')] + '.wav'
-    audio = AudioSegment.from_file(file=audio_filename)
     censure_sound = AudioSegment.from_file(censure_sound_path)
-    model = vosk_model_path
+    model = Model(vosk_model_path)
     
     # Save audio from video as separate file in the same directory
     moviepy.editor.VideoFileClip(video_filename).audio.write_audiofile(audio_filename)
     # Resave that audio in mono channel (script works with only mono audio!)
     AudioSegment.from_file(file=audio_filename).set_channels(1).export(audio_filename, format='wav')
+
+    # getting that audiofile like object
+    audio = AudioSegment.from_file(file=audio_filename)
     
     # preparation to recognition
     wf = wave.open(audio_filename, "rb")
@@ -88,7 +92,7 @@ def media_censor(video_file_path: str, censure_sound_path: str, vosk_model_path:
             list_of_Words.append(w)  # and add it to list
             for word in censuring_words:
                 if word in w.word:
-                    audio = audio[:w.start * 1000] + censure_sound[:(w.end - w.start) * 1000] + sound[w.end * 1000:]
+                    audio = audio[:w.start * 1000] + censure_sound[:(w.end - w.start) * 1000] + audio[w.end * 1000:]
                     
     # resave past audiofile but now censored
     audio.export(audio_filename, format='wav')
@@ -96,6 +100,6 @@ def media_censor(video_file_path: str, censure_sound_path: str, vosk_model_path:
     
     # finally set video a censored audio and render
     audioclip = moviepy.editor.AudioFileClip(audio_filename)
-    videoclip = moviepy.editor.VideoFileClip(full_video_filename)
+    videoclip = moviepy.editor.VideoFileClip(video_filename)
     videoclip.audio = audioclip
     videoclip.write_videofile(video_filename[:video_filename.rindex('.')] + '_censored.mp4')
